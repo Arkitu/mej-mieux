@@ -2,7 +2,7 @@ use std::{thread::spawn, time::Instant};
 use num_cpus;
 
 type Num = usize;
-const LIMIT: Num = 1_000_000_000;
+const LIMIT: Num = 1_080_000_000_000;
 
 fn phi(mut x: Num) -> Num {
     let mut y = 1;
@@ -23,7 +23,7 @@ fn main() {
     let mut threads = Vec::new();
     for n in 0..num_cpus {
         threads.push(spawn(move || {
-            let mut repartition = [0_u32; 10];
+            let mut repartition = [Num::MIN; 10];
             for i in 0..LIMIT/num_cpus {
                 let mut y = (i*num_cpus) + n;
                 while y >= 10 {
@@ -37,7 +37,7 @@ fn main() {
 
     println!("Running with {} threads...\n", num_cpus);
 
-    let mut repartition = [0_u32; 10];
+    let mut repartition = [Num::MIN; 10];
     for thread in threads {
         let r = thread.join().unwrap();
         for i in 0..10 {
