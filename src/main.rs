@@ -2,6 +2,7 @@ use std::{thread::spawn, time::Instant};
 
 type Num = usize;
 const THREADS: Num = 8;
+const LIMIT: Num = 1_000_000_000;
 
 fn phi(mut x: Num) -> Num {
     let mut y = 1;
@@ -22,7 +23,7 @@ fn main() {
     for n in 0..THREADS {
         threads.push(spawn(move || {
             let mut repartition = [0_u32; 10];
-            for i in 0..1_000_000_000/THREADS {
+            for i in 0..LIMIT/THREADS {
                 let mut y = (i*THREADS) + n;
                 while y >= 10 {
                     y = phi(y)
@@ -40,7 +41,9 @@ fn main() {
             repartition[i] += r[i];
         }
     }
-    
-    println!("{:#?}", repartition);
-    println!("Done in {:?}", start.elapsed());
+
+    for i in 0..10 {
+        println!("{} : {}", i, repartition[i]);
+    }
+    println!("\nDone {} numbers in {:?}", LIMIT, start.elapsed());
 }
